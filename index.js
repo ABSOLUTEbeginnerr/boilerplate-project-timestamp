@@ -1,8 +1,4 @@
-require('dotenv').config()
-// index.js
-// where your node app starts
-
-// init project
+require('dotenv').config();
 var express = require('express');
 var app = express();
 
@@ -20,9 +16,50 @@ app.get("/", function (req, res) {
 });
 
 
+
+function isTimestamp(value) {
+  return typeof value === 'string' && /^\d{13}$/.test(value);
+}
+
+function isDateString(value) {
+  return typeof value === 'string' && !isNaN(Date.parse(value));
+}
+
+function checkDateType(value) {
+  if (isTimestamp(value)) {
+      return 'Timestamp';
+  } else if (isDateString(value)) {
+      return 'Regular Date';
+  } else {
+      return 'Invalid Date';
+  }
+}
+
+
 // your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
+app.get("/api/:date?", function (req, res) {
+  const date = req.params.date;
+  let input;
+  input = new Date(parseInt(date));
+
+  let dateInMilli = input.getTime();
+  let UTC = input.toUTCString();
+
+  if (checkDateType(date) == 'Regular Date'){
+    res.json({
+      unix:dateInMilli,
+      utc:UTC
+    })
+  }else if (checkDateType(date) == 'Timestamp'){
+    res.json({
+      unix:date,
+      utc:input.toUTCString()
+    })
+  }
+
+  
+
+
 });
 
 
