@@ -42,33 +42,29 @@ function checkDateType(value) {
 app.get("/api/:date?", function (req, res) {
   const date = req.params.date;
   let input;
-  input = new Date(date);
-
-  let dateInMilli = input.getTime();
-  let UTC = input.toUTCString();
-
-  console.log(date);
 
   if (checkDateType(date) == 'Regular Date'){
+    input = new Date(date);
     res.json({
-      unix: dateInMilli,
-      utc: UTC
+      unix: input.getTime(),
+      utc: input.toUTCString()
     })
   }else if (checkDateType(date) == 'Timestamp'){
-    input = new Date(parseInt(date));
+    input = new Date(Number(date));
     res.json({
-      unix:date,
-      utc: new Date(Number(date)).toUTCString(), //input.toUTCString() 
+      unix: Number(date),
+      utc: input.toUTCString() 
     })
-  }else if(checkDateType(date) == 'Invalid Date'){
-    res.json({error:'Invalid Date'})
 
   }else if(checkDateType(date) == 'Empty String'){
-    console.log(date);
     res.json({
       unix:  Date.now(),
       utc: new Date(Date.now()).toUTCString()
     })
+
+  }else{
+    res.json({error:'Invalid Date'})
+
   }
 
   
