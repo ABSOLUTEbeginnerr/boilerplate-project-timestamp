@@ -56,18 +56,17 @@ app.get("/api/:date?", function (req, res) {
     })
   }else if (checkDateType(date) == 'Timestamp'){
     input = new Date(parseInt(date));
-    res.send(`{ unix: ${date}, utc: "${input.toUTCString()}" }`)
-    // res.json({
-    //   unix:date,
-    //   utc:input.toUTCString()
-    // })
+    res.json({
+      unix:date,
+      utc: new Date(Number(date)).toUTCString(), //input.toUTCString() 
+    })
   }else if(checkDateType(date) == 'Invalid Date'){
     res.json({error:'Invalid Date'})
 
   }else if(checkDateType(date) == 'Empty String'){
     console.log(date);
     res.json({
-      unix: Date.now(),
+      unix:  Date.now(),
       utc: new Date(Date.now()).toUTCString()
     })
   }
